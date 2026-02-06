@@ -5,6 +5,7 @@ SCRIPT_COMMIT="60507bffc0b13e7a81753a51005dbbeba4b23018"
 
 ffbuild_enabled() {
     (( $(ffbuild_ffver) >= 404 )) || return -1
+	(( $TARGET == win32 )) && return -1
     return 0
 }
 
