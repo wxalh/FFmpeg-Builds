@@ -35,6 +35,16 @@ cat <<EOF >"$BUILD_SCRIPT"
     git clone --filter=blob:none --branch='$GIT_BRANCH' '$FFMPEG_REPO' ffmpeg
     cd ffmpeg
 
+    # If building for win32, attempt to run the repo-supplied patch script (mounted as /workdir)
+    if [ "${TARGET}" = "win32" ]; then
+      if [ -x /workdir/ci/disable_gfxcapture_for_i686.sh ]; then
+        echo "Running disable_gfxcapture_for_i686.sh inside container"
+        /workdir/ci/disable_gfxcapture_for_i686.sh /ffbuild/ffmpeg || true
+      else
+        echo "/workdir/ci/disable_gfxcapture_for_i686.sh not found or not executable"
+      fi
+    fi
+
     ./configure --prefix=/ffbuild/prefix --pkg-config-flags="--static" \$FFBUILD_TARGET_FLAGS \$FF_CONFIGURE \
         --extra-cflags="\$FF_CFLAGS" --extra-cxxflags="\$FF_CXXFLAGS" --extra-libs="\$FF_LIBS" \
         --extra-ldflags="\$FF_LDFLAGS" --extra-ldexeflags="\$FF_LDEXEFLAGS" \
@@ -46,7 +56,8 @@ EOF
 
 [[ -t 1 ]] && TTY_ARG="-t" || TTY_ARG=""
 
-docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild -v "$BUILD_SCRIPT":/build.sh "$IMAGE" bash /build.sh
+# mount repository root into container as /workdir so container can run /workdir/ci/disable_gfxcapture_for_i686.sh
+docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild -v "$BUILD_SCRIPT":/build.sh -v "$PWD":/workdir "$IMAGE" bash /build.sh
 
 if [[ -n "$FFBUILD_OUTPUT_DIR" ]]; then
     mkdir -p "$FFBUILD_OUTPUT_DIR"
