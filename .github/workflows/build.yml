@@ -271,8 +271,8 @@ jobs:
       - name: Disable gfxcapture for win32 (host)
         if: ${{ matrix.target == 'win32' }}
         run: |
-          chmod +x ci/guard_mf_video_rotation.sh || true
-          bash ci/guard_mf_video_rotation.sh .
+          chmod +x ci/disable_mf_video_rotation.sh || true
+          bash ci/disable_mf_video_rotation.sh .
       - name: Build ffmpeg
         run: |
           T="$(echo -n ${{ github.token }} | sha256sum | head -c 64)" && echo -e "::add-mask::${T}\n::stop-commands::${T}"
