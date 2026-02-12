@@ -268,7 +268,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      - name: Disable gfxcapture for win32 (host)
+      - name: Disable mf_video_rotation for win32 (host)
         if: ${{ matrix.target == 'win32' }}
         run: |
           chmod +x ci/disable_mf_video_rotation.sh || true
