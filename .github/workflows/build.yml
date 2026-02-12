@@ -268,11 +268,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      - name: Disable gfxcapture for win32 (host)
-        if: ${{ matrix.target == 'win32' }}
-        run: |
-          chmod +x ci/disable_gfxcapture_for_i686.sh || true
-          bash ci/disable_gfxcapture_for_i686.sh .
       - name: Build ffmpeg
         run: |
           T="$(echo -n ${{ github.token }} | sha256sum | head -c 64)" && echo -e "::add-mask::${T}\n::stop-commands::${T}"
