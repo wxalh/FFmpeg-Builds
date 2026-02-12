@@ -1,10 +1,13 @@
 FF_CONFIGURE="--enable-gpl --enable-version3"
 
+FF_CFLAGS=""
+
 if [[ $TARGET == win32 ]]; then
     FF_CONFIGURE+=" --disable-debug --disable-w32threads --enable-pthreads --disable-filter=gfxcapture"
+
+    FF_CFLAGS="-D_WIN32_WINNT=0x0601 -DWINVER=0x0601"
 fi
 
-FF_CFLAGS=""
 FF_CXXFLAGS=""
 FF_LDFLAGS=""
 GIT_BRANCH="master"
