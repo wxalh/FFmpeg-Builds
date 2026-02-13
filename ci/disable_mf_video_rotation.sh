@@ -10,8 +10,8 @@ if [ -f "${TARGET_FILE}" ]; then
   # 使用固定字符串搜索以避免正则歧义
   if grep -Fq "GUID_ENTRY(MF_MT_VIDEO_ROTATION)" "${TARGET_FILE}"; then
     cp -a "${TARGET_FILE}" "${TARGET_FILE}.bak"
-    # 用 sed 将包含 GUID_ENTRY(MF_MT_VIDEO_ROTATION), 的整行替换为注释行（保留原内容备份）
-    sed -E -i 's/^[[:space:]]*(GUID_ENTRY\(\s*MF_MT_VIDEO_ROTATION\s*\),)/\/\* disabled-for-win7: \1 \*\//' "${TARGET_FILE}"
+    # 用 sed 将包含 GUID_ENTRY(MF_MT_VIDEO_ROTATION), 的整行删除（保留原内容备份）
+	sed -i.bak -E 's/^[[:space:]]*(GUID_ENTRY\(\s*MF_MT_VIDEO_ROTATION\s*\),)//' "${TARGET_FILE}"
     echo "Patched ${TARGET_FILE} (backup at ${TARGET_FILE}.bak)"
   else
     echo "No GUID_ENTRY(MF_MT_VIDEO_ROTATION) found in ${TARGET_FILE} (nothing to do)"
