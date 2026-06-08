@@ -13,7 +13,7 @@ ffbuild_enabled() {
     [[ $ADDINS_STR == *5.0* && $TARGET == win* ]] && return -1
     [[ $ADDINS_STR == *5.1* && $TARGET == win* ]] && return -1
     [[ $ADDINS_STR == *6.0* && $TARGET == win* ]] && return -1
-    [[ $TARGET == linuxarm64 ]] && return -1
+    [[ $TARGET != linux64 && $TARGET != win* ]] && return -1
     return 0
 }
 
@@ -58,7 +58,7 @@ ffbuild_dockerbuild() {
     fi
 
     export CFLAGS="$RAW_CFLAGS"
-    export LDFLAFS="$RAW_LDFLAGS"
+    export LDFLAGS="$RAW_LDFLAGS"
 
     meson "${myconf[@]}" ..
     ninja -j"$(nproc)"
@@ -70,7 +70,9 @@ ffbuild_dockerbuild() {
         gen-implib "$FFBUILD_DESTPREFIX"/lib/{libva-x11.so.2,libva-x11.a}
         rm "$FFBUILD_DESTPREFIX"/lib/libva{,-drm,-x11}.so*
 
-        echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libva.pc
+        if [[ $TARGET != linuxppc64 && $TARGET != linuxmips64 && $TARGET != linuxriscv64 ]]; then
+            echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libva.pc
+        fi
     fi
 }
 

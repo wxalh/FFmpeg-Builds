@@ -30,6 +30,7 @@ RUN \
         -or -name 'libmvec.a' \
         -or -name 'librt.a' \
         \) -delete && \
+    find /opt/ct-ng -name 'libdl.so.2' -exec sh -c 'for lib; do ln -sf "$(basename "$lib")" "$(dirname "$lib")/libdl.so"; done' sh {} + && \
     mkdir /opt/ffbuild
 
 ENV FFBUILD_TOOLCHAIN=powerpc64-ffbuild-linux-gnu \

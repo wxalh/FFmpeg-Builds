@@ -9,7 +9,9 @@ ffbuild_depends() {
 }
 
 ffbuild_enabled() {
+    [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]] && return -1
     (( $(ffbuild_ffver) > 600 )) || return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     return 0
 }
 

@@ -8,7 +8,9 @@ ffbuild_depends() {
     echo base
     echo libiconv
     echo x11
-    echo pulseaudio
+    if [[ $TARGET != linuxppc64 && $TARGET != linuxmips64 && $TARGET != linuxriscv64 ]]; then
+        echo pulseaudio
+    fi
     echo libsamplerate
 }
 
@@ -31,13 +33,18 @@ ffbuild_dockerbuild() {
     )
 
     if [[ $TARGET == linux* ]]; then
+        local pulseaudio=ON
+        if [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]]; then
+            pulseaudio=OFF
+        fi
+
         mycmake+=(
             -DSDL_X11=ON
             -DSDL_X11_SHARED=OFF
             -DHAVE_XGENERICEVENT=TRUE
             -DSDL_VIDEO_DRIVER_X11_HAS_XKBKEYCODETOKEYSYM=1
 
-            -DSDL_PULSEAUDIO=ON
+            -DSDL_PULSEAUDIO="$pulseaudio"
             -DSDL_PULSEAUDIO_SHARED=OFF
         )
     fi
@@ -51,7 +58,11 @@ ffbuild_dockerbuild() {
         sed -ri -e 's/\-Wl,\-\-no\-undefined.*//' \
             -e 's/ \-l\/.+?\.a//g' \
             "$FFBUILD_DESTPREFIX"/lib/pkgconfig/sdl2.pc
-        echo 'Requires: libpulse-simple xxf86vm xscrnsaver xrandr xfixes xi xinerama xcursor' >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/sdl2.pc
+        if [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]]; then
+            echo 'Requires: xxf86vm xscrnsaver xrandr xfixes xi xinerama xcursor' >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/sdl2.pc
+        else
+            echo 'Requires: libpulse-simple xxf86vm xscrnsaver xrandr xfixes xi xinerama xcursor' >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/sdl2.pc
+        fi
     elif [[ $TARGET == win* ]]; then
         sed -ri -e 's/\-Wl,\-\-no\-undefined.*//' \
             -e 's/ \-mwindows//g' \

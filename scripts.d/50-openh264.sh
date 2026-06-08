@@ -4,6 +4,7 @@ SCRIPT_REPO="https://github.com/cisco/openh264.git"
 SCRIPT_COMMIT="e3f5b10438e2bacc155cf54578222bd4236c9f06"
 
 ffbuild_enabled() {
+    [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]] && return -1
     return 0
 }
 
@@ -43,6 +44,11 @@ ffbuild_dockerbuild() {
         myconf+=(
             OS=linux
             ARCH=aarch64
+        )
+    elif [[ $TARGET == linuxarmhf ]]; then
+        myconf+=(
+            OS=linux
+            ARCH=arm
         )
     else
         echo "Unknown target"

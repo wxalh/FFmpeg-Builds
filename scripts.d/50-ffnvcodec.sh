@@ -17,6 +17,8 @@ SCRIPT_BRANCH4="sdk/12.2"
 
 ffbuild_enabled() {
     [[ $TARGET == winarm64 ]] && (( $(ffbuild_ffver) <= 801 )) && return -1
+    [[ $TARGET == linuxarmhf ]] && return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     (( $(ffbuild_ffver) >= 404 )) || return -1
     return 0
 }

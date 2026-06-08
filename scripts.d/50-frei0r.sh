@@ -6,6 +6,7 @@ SCRIPT_COMMIT="dfc89ab1f40fc32d5609218ebc3dd0b3cc545dd8"
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1
     (( $(ffbuild_ffver) >= 500 )) || return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     return 0
 }
 

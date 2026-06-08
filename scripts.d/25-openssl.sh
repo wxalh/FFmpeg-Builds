@@ -75,6 +75,26 @@ EOF
             --cross-compile-prefix="$FFBUILD_CROSS_PREFIX"
             linux-aarch64
         )
+    elif [[ $TARGET == linuxarmhf ]]; then
+        myconf+=(
+            --cross-compile-prefix="$FFBUILD_CROSS_PREFIX"
+            linux-armv4
+        )
+    elif [[ $TARGET == linuxppc64 ]]; then
+        myconf+=(
+            --cross-compile-prefix="$FFBUILD_CROSS_PREFIX"
+            linux-ppc64
+        )
+    elif [[ $TARGET == linuxmips64 ]]; then
+        myconf+=(
+            --cross-compile-prefix="$FFBUILD_CROSS_PREFIX"
+            linux64-mips64
+        )
+    elif [[ $TARGET == linuxriscv64 ]]; then
+        myconf+=(
+            --cross-compile-prefix="$FFBUILD_CROSS_PREFIX"
+            linux64-riscv64
+        )
     else
         echo "Unknown target"
         return -1

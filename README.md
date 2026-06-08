@@ -1,17 +1,17 @@
 # FFmpeg Static Auto-Builds
 
-Static Windows (x86_64) and Linux (x86_64) Builds of ffmpeg master and latest release branch.
+Static Windows and Linux Builds of ffmpeg master and latest release branch.
 
 Windows builds are targetting Windows 7 and newer, provided UCRT is installed.
 The minimum supported version is Windows 10 22H2, no guarantees on anything older.
 
-Linux builds are targetting RHEL/CentOS 8 (glibc-2.28 + linux-4.18) and anything more recent.
+Linux builds are targetting Ubuntu 18.04 (glibc-2.27 + linux-4.4) and anything more recent.
 
 ## Auto-Builds
 
 Builds run daily at 12:00 UTC (or GitHubs idea of that time) and are automatically released on success.
 
-**Auto-Builds run ONLY for win(arm)64 and linux(arm)64. There are no win32/x86 auto-builds, though you can produce win32 builds yourself following the instructions below.**
+**Auto-Builds run ONLY for win(arm)64 and linux(arm)64/linuxarmhf. There are no win32/x86 auto-builds, though you can produce win32 builds yourself following the instructions below.**
 
 ### Release Retention Policy
 
@@ -46,13 +46,14 @@ On success, the resulting zip file will be in the `artifacts` subdir.
 Available targets:
 * `win64` (x86_64 Windows)
 * `win32` (x86 Windows)
-* `linux64` (x86_64 Linux, glibc>=2.28, linux>=4.18)
-* `linuxarm64` (arm64 (aarch64) Linux, glibc>=2.28, linux>=4.18)
+* `linux64` (x86_64 Linux, glibc>=2.27, linux>=4.4)
+* `linuxarm64` (arm64 (aarch64) Linux, glibc>=2.27, linux>=4.4)
+* `linuxarmhf` (armv7 hard-float Linux, glibc>=2.27, linux>=4.4)
 
-The linuxarm64 target will not build some dependencies due to lack of arm64 (aarch64) architecture support or cross-compiling restrictions.
+The linuxarm64/linuxarmhf targets will not build some dependencies due to lack of ARM architecture support or cross-compiling restrictions.
 
 * `davs2` and `xavs2`: aarch64 support is broken.
-* `libmfx` and `libva`: Library for Intel QSV, so there is no aarch64 support.
+* `libmfx` and `libva`: Library for Intel QSV, so there is no ARM support.
 
 Available variants:
 * `gpl` Includes all dependencies, even those that require full GPL instead of just LGPL.

@@ -22,7 +22,7 @@ ffbuild_dockerbuild() {
         --without-lint
     )
 
-    if [[ $TARGET == linuxarm64 ]]; then
+    if [[ $TARGET == linuxarm64 || $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]]; then
         myconf+=(
             --disable-malloc0returnsnull
         )
@@ -38,7 +38,7 @@ ffbuild_dockerbuild() {
     fi
 
     export CFLAGS="$RAW_CFLAGS -D_GNU_SOURCE"
-    export LDFLAFS="$RAW_LDFLAGS"
+    export LDFLAGS="$RAW_LDFLAGS"
 
     ./configure "${myconf[@]}"
     make -j$(nproc)

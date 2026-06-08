@@ -4,6 +4,7 @@ SCRIPT_REPO="https://github.com/ultravideo/kvazaar.git"
 SCRIPT_COMMIT="d6815293f34a094e26ba6c50b8644660ddc13e09"
 
 ffbuild_enabled() {
+    [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]] && return -1
     return 0
 }
 

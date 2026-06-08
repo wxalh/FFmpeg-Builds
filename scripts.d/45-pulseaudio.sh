@@ -13,6 +13,7 @@ ffbuild_depends() {
 
 ffbuild_enabled() {
     [[ $TARGET == linux* ]] || return 1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]] && return -1
     return 0
 }
 
@@ -59,8 +60,13 @@ ffbuild_dockerbuild() {
 
     rm -r "$FFBUILD_DESTPREFIX"/share
 
-    echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc
-    echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
+    if [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]]; then
+        echo "Libs.private: -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc
+        echo "Libs.private: -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
+    else
+        echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc
+        echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
+    fi
 }
 
 ffbuild_configure() {

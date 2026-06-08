@@ -25,8 +25,13 @@ ffbuild_dockerbuild() {
         fi
     fi
 
+    local x86simd=()
+    if [[ $TARGET != win32 && $TARGET != win64 && $TARGET != linux32 && $TARGET != linux64 ]]; then
+        x86simd+=( -DVVENC_ENABLE_X86_SIMD=OFF )
+    fi
+
     cmake -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN" -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX" -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=OFF -DVVENC_LIBRARY_ONLY=ON -DVVENC_ENABLE_WERROR=OFF -DVVENC_ENABLE_LINK_TIME_OPT=OFF -DEXTRALIBS="-lstdc++" "${armsimd[@]}" ..
+        -DBUILD_SHARED_LIBS=OFF -DVVENC_LIBRARY_ONLY=ON -DVVENC_ENABLE_WERROR=OFF -DVVENC_ENABLE_LINK_TIME_OPT=OFF -DEXTRALIBS="-lstdc++" "${armsimd[@]}" "${x86simd[@]}" ..
 
     make -j$(nproc)
     make install DESTDIR="$FFBUILD_DESTDIR"

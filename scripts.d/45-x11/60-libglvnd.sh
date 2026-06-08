@@ -15,7 +15,6 @@ ffbuild_dockerbuild() {
         --prefix="$FFBUILD_PREFIX"
         --buildtype=release
         --default-library=static
-        -Dasm=enabled
         -Dx11=enabled
         -Degl=true
         -Dglx=enabled
@@ -23,6 +22,15 @@ ffbuild_dockerbuild() {
         -Dgles2=true
         -Dheaders=true
     )
+
+    case "$TARGET" in
+    linuxmips64|linuxppc64|linuxriscv64)
+        myconf+=(-Dasm=disabled)
+        ;;
+    *)
+        myconf+=(-Dasm=enabled)
+        ;;
+    esac
 
     if [[ $TARGET == linux* ]]; then
         myconf+=(

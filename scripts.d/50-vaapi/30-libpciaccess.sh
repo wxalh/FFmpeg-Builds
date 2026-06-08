@@ -10,6 +10,7 @@ ffbuild_depends() {
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     return 0
 }
 
@@ -33,7 +34,7 @@ ffbuild_dockerbuild() {
     fi
 
     export CFLAGS="$RAW_CFLAGS"
-    export LDFLAFS="$RAW_LDFLAGS"
+    export LDFLAGS="$RAW_LDFLAGS"
 
     meson setup "${myconf[@]}" ..
     ninja -j$(nproc)
@@ -42,5 +43,7 @@ ffbuild_dockerbuild() {
     gen-implib "$FFBUILD_DESTPREFIX"/lib/{libpciaccess.so.0,libpciaccess.a}
     rm "$FFBUILD_DESTPREFIX"/lib/libpciaccess.so*
 
-    echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/pciaccess.pc
+    if [[ $TARGET != linuxppc64 && $TARGET != linuxmips64 && $TARGET != linuxriscv64 ]]; then
+        echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/pciaccess.pc
+    fi
 }

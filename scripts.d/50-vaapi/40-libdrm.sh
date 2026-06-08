@@ -5,6 +5,7 @@ SCRIPT_COMMIT="b8b7c57c00954b22ac182543602bd8f654ea1c30"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     return 0
 }
 
@@ -37,7 +38,7 @@ ffbuild_dockerbuild() {
     fi
 
     export CFLAGS="$RAW_CFLAGS"
-    export LDFLAFS="$RAW_LDFLAGS"
+    export LDFLAGS="$RAW_LDFLAGS"
 
     meson "${myconf[@]}" ..
     ninja -j$(nproc)
@@ -46,7 +47,9 @@ ffbuild_dockerbuild() {
     gen-implib "$FFBUILD_DESTPREFIX"/lib/{libdrm.so.2,libdrm.a}
     rm "$FFBUILD_DESTPREFIX"/lib/libdrm*.so*
 
-    echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libdrm.pc
+    if [[ $TARGET != linuxppc64 && $TARGET != linuxmips64 && $TARGET != linuxriscv64 ]]; then
+        echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libdrm.pc
+    fi
 }
 
 ffbuild_configure() {

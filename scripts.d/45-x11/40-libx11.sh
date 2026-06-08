@@ -40,13 +40,15 @@ ffbuild_dockerbuild() {
     fi
 
     export CFLAGS="$RAW_CFLAGS"
-    export LDFLAFS="$RAW_LDFLAGS"
+    export LDFLAGS="$RAW_LDFLAGS"
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install DESTDIR="$FFBUILD_DESTDIR"
 
-    echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/x11.pc
+    if [[ $TARGET != linuxppc64 && $TARGET != linuxmips64 && $TARGET != linuxriscv64 ]]; then
+        echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/x11.pc
+    fi
 
     gen-implib "$FFBUILD_DESTPREFIX"/lib/{libX11-xcb.so.1,libX11-xcb.a}
     gen-implib "$FFBUILD_DESTPREFIX"/lib/{libX11.so.6,libX11.a}

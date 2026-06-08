@@ -5,6 +5,7 @@ SCRIPT_COMMIT="1963b530e4b09d1edf1339d3ad26a3aa5a5a7ac6"
 
 ffbuild_enabled() {
     [[ $TARGET == winarm64 ]] && return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]] && return -1
     return 0
 }
 
@@ -44,6 +45,11 @@ ffbuild_dockerbuild() {
     elif [[ $TARGET == linuxarm64 ]]; then
         myconf+=(
             --target=arm64-linux-gcc
+        )
+        export CROSS="$FFBUILD_CROSS_PREFIX"
+    elif [[ $TARGET == linuxarmhf ]]; then
+        myconf+=(
+            --target=armv7-linux-gcc
         )
         export CROSS="$FFBUILD_CROSS_PREFIX"
     else

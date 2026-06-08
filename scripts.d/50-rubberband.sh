@@ -11,6 +11,7 @@ ffbuild_depends() {
 
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     return 0
 }
 

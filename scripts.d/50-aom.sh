@@ -28,7 +28,26 @@ ffbuild_dockerbuild() {
     # Workaround broken build system
     export CFLAGS="$CFLAGS -pthread -I/opt/ffbuild/include/libvmaf"
 
-    cmake -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX" -DBUILD_SHARED_LIBS=OFF -DENABLE_EXAMPLES=NO -DENABLE_TESTS=NO -DENABLE_TOOLS=NO -DCONFIG_TUNE_VMAF=1 ..
+    local myconf=(
+        -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN"
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX"
+        -DBUILD_SHARED_LIBS=OFF
+        -DENABLE_EXAMPLES=NO
+        -DENABLE_TESTS=NO
+        -DENABLE_TOOLS=NO
+        -DCONFIG_TUNE_VMAF=1
+    )
+
+    if [[ $TARGET == linuxarmhf ]]; then
+        myconf+=(
+            -DAOM_TARGET_CPU=generic
+            -DENABLE_NEON=OFF
+            -DCONFIG_RUNTIME_CPU_DETECT=0
+        )
+    fi
+
+    cmake "${myconf[@]}" ..
     make -j$(nproc)
     make install DESTDIR="$FFBUILD_DESTDIR"
 

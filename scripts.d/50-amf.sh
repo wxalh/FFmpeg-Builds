@@ -4,6 +4,7 @@ SCRIPT_REPO="https://github.com/GPUOpen-LibrariesAndSDKs/AMF.git"
 SCRIPT_COMMIT="eadd00804d5f7e5cd8c85d540073198312870776"
 
 ffbuild_enabled() {
+    [[ $TARGET == linuxarmhf ]] && return -1
     return 0
 }
 

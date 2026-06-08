@@ -23,7 +23,7 @@ ffbuild_dockerbuild() {
         --with-incoming-stack-boundary=2
     )
 
-    if [[ $TARGET != *arm64 ]]; then
+    if [[ $TARGET == win32 || $TARGET == win64 || $TARGET == linux32 || $TARGET == linux64 ]]; then
         myconf+=(
             --enable-sse2
             --enable-avx

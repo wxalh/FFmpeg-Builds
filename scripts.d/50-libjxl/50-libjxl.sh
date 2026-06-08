@@ -16,20 +16,35 @@ ffbuild_dockerdl() {
 ffbuild_dockerbuild() {
     mkdir build && cd build
 
+    local myconf=()
+
     if [[ $TARGET == linux* ]]; then
         # our glibc is too old(<2.25), and their detection fails for some reason
         export CXXFLAGS="$CXXFLAGS -DVQSORT_GETRANDOM=0 -DVQSORT_SECURE_SEED=0"
+
+        if [[ $TARGET == linuxppc64 ]]; then
+            export CXXFLAGS="$CXXFLAGS -DHWY_COMPILE_ONLY_SCALAR"
+            export CFLAGS="$CFLAGS -DHWY_COMPILE_ONLY_SCALAR"
+        fi
     elif [[ $TARGET == win32 || $TARGET == win64 ]]; then
         # Fix AVX2 related crash due to unaligned stack memory
         export CXXFLAGS="$CXXFLAGS -Wa,-muse-unaligned-vector-move"
         export CFLAGS="$CFLAGS -Wa,-muse-unaligned-vector-move"
     fi
 
+    if [[ $TARGET == linuxppc64 ]]; then
+        myconf+=(
+            -DJPEGXL_ENABLE_HWY_PPC8=OFF
+            -DJPEGXL_ENABLE_HWY_PPC9=OFF
+            -DJPEGXL_ENABLE_HWY_PPC10=OFF
+        )
+    fi
+
     cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX" -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DJPEGXL_ENABLE_SKCMS=OFF -DJPEGXL_FORCE_SYSTEM_LCMS2=ON \
         -DBUILD_SHARED_LIBS=OFF -DJPEGXL_STATIC=OFF -DBUILD_SHARED_LIBS=OFF -DJPEGXL_ENABLE_TOOLS=OFF -DJPEGXL_ENABLE_VIEWERS=OFF -DJPEGXL_EMSCRIPTEN=OFF -DJPEGXL_ENABLE_DOXYGEN=OFF \
         -DJPEGXL_ENABLE_JPEGLI=OFF -DBUILD_TESTING=OFF -DJPEGXL_ENABLE_EXAMPLES=OFF -DJPEGXL_ENABLE_MANPAGES=OFF -DJPEGXL_ENABLE_JNI=OFF -DJPEGXL_ENABLE_PLUGINS=OFF \
-        -DJPEGXL_ENABLE_DEVTOOLS=OFF -DJPEGXL_ENABLE_BENCHMARK=OFF -DJPEGXL_BUNDLE_LIBPNG=OFF -DJPEGXL_ENABLE_SJPEG=OFF -DJPEGXL_FORCE_SYSTEM_BROTLI=ON ..
+        -DJPEGXL_ENABLE_DEVTOOLS=OFF -DJPEGXL_ENABLE_BENCHMARK=OFF -DJPEGXL_BUNDLE_LIBPNG=OFF -DJPEGXL_ENABLE_SJPEG=OFF -DJPEGXL_FORCE_SYSTEM_BROTLI=ON "${myconf[@]}" ..
     ninja -j$(nproc)
     DESTDIR="$FFBUILD_DESTDIR" ninja install
 

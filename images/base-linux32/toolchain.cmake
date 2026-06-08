@@ -1,6 +1,6 @@
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR i686)
-set(CMAKE_SYSTEM_VERSION 4.18.20)
+set(CMAKE_SYSTEM_VERSION 4.4.0)
 
 set(triple i686-ffbuild-linux-gnu)
 

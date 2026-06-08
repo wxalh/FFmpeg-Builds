@@ -3,6 +3,7 @@
 SCRIPT_SKIP="1"
 
 ffbuild_enabled() {
+    [[ $TARGET == linuxppc64 || $TARGET == linuxriscv64 || $TARGET == linuxmips64 ]] && return -1
     return 0
 }
 

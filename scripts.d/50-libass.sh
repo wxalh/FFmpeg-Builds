@@ -18,6 +18,11 @@ ffbuild_enabled() {
 ffbuild_dockerbuild() {
     mkdir build && cd build
 
+    local asm=enabled
+    if [[ $TARGET == linuxarmhf || $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]]; then
+        asm=disabled
+    fi
+
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
         --buildtype=release
@@ -28,7 +33,7 @@ ffbuild_dockerbuild() {
         -Dfuzz=disabled
         -Dcheckasm=disabled
         -Dfontconfig=enabled
-        -Dasm=enabled
+        -Dasm="$asm"
         -Dlibunibreak=enabled
     )
 

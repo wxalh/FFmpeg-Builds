@@ -1,0 +1,13 @@
+[binaries]
+c = 'arm-ffbuild-linux-gnueabihf-gcc'
+cpp = 'arm-ffbuild-linux-gnueabihf-g++'
+ld = 'arm-ffbuild-linux-gnueabihf-ld'
+ar = 'arm-ffbuild-linux-gnueabihf-gcc-ar'
+ranlib = 'arm-ffbuild-linux-gnueabihf-gcc-ranlib'
+strip = 'arm-ffbuild-linux-gnueabihf-strip'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'arm'
+cpu = 'armv7'
+endian = 'little'

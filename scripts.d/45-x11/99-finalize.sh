@@ -22,5 +22,7 @@ ffbuild_dockerbuild() {
 }
 
 ffbuild_libs() {
-    echo -ldl
+    if [[ $TARGET != linuxppc64 && $TARGET != linuxmips64 && $TARGET != linuxriscv64 ]]; then
+        echo -ldl
+    fi
 }

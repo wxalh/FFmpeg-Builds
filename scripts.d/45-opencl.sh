@@ -7,6 +7,7 @@ SCRIPT_REPO2="https://github.com/KhronosGroup/OpenCL-ICD-Loader.git"
 SCRIPT_COMMIT2="b7bd2803acc779c03d96588e9ca9e9568a18698a"
 
 ffbuild_enabled() {
+    [[ $TARGET == linuxppc64 || $TARGET == linuxmips64 || $TARGET == linuxriscv64 ]] && return -1
     return 0
 }
 
