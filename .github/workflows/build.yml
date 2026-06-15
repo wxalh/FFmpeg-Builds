@@ -19,8 +19,6 @@ on:
         type: boolean
         default: false
         required: false
-  schedule:
-    - cron: '17 18 * * *'
 
 permissions:
   actions: write
